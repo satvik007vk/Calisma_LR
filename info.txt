@@ -1,0 +1,27 @@
+## predictors
+clf - cloud fraction
+lwp - liquid water path
+blh - boundary-layer height (m)
+cape - connectivity available potential energy (Jkg−1)
+mlspf -
+mslhf -
+msshf -
+sst - sea surface temperature (K)
+
+
+700, 850 = Instantaneous pressure level parameters (at 700 hPa, 850 hPa)
+q700, q850
+rh700, rh850 - Relative humidity (%)
+t700, t850 - Temperature (K)
+tcwv - Total column water vapour (kgm−2)
+u700, u850 - Eastward wind component (ms-1)
+v700, v850 - Northward wind component (ms-1)
+w700, w850 - Vertical velocity (Pas-1)
+
+Terra_descending -
+lsm -
+eis - estimated inversion strength
+lnNd - ln(cloud droplet number concentration)
+
+
+
