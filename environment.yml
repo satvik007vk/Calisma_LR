@@ -1,6 +1,7 @@
 name: calisma
 channels:
   - defaults
+  - conda-forge
 dependencies:
   - python=3.11.5
   - pandas=2.2.2
@@ -9,3 +10,5 @@ dependencies:
   - cartopy=0.22.0
   - scipy
   - statsmodels
+  - scikit-learn=1.5.1y
+  - seaborn=0.13.2

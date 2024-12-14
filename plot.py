@@ -1,8 +1,8 @@
-
 import matplotlib.pyplot as plt
 import pandas as pd
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+from statsmodels.tsa.seasonal import seasonal_decompose
 
 file = "./Daten/se_atlantic_df.csv"
 df = pd.read_csv(file, index_col='time')
@@ -13,7 +13,9 @@ class PlotData:
         self.column = column
         self.dataframe = dataframe
 
-    def temporal_plot(column):
+    def temporal_plot(column: str):
+        df.index = pd.to_datetime(df.index)
+
         plt.figure(figsize=(15, 6))
         plt.plot(df.index, df[column], label=column, color='blue', alpha=0.7)
         plt.title(f"{column} Over Time")
@@ -23,7 +25,7 @@ class PlotData:
         plt.grid()
         plt.show()
 
-    def spatial_plot(column):
+    def spatial_plot(column: str):
         plt.figure(figsize=(10, 8))
         sc = plt.scatter(df['lon'], df['lat'], c=df[column], cmap='viridis', alpha=0.7)
         plt.colorbar(sc, label=column)
@@ -33,7 +35,7 @@ class PlotData:
         plt.grid()
         plt.show()
 
-    def spatial_plot_on_map(df, column, title, cmap, colorbar_label):
+    def spatial_plot_on_map(df, column: str, title, cmap, colorbar_label):
         plt.figure(figsize=(12, 8))
         ax = plt.axes(projection=ccrs.PlateCarree())
         ax.set_global()
@@ -55,5 +57,28 @@ class PlotData:
 
 
 
+    def ts_decompose(column: str):
+        ts_decomp_column = seasonal_decompose(df[column], model='additive', period=12,
+                                       extrapolate_trend='freq')  #period = 12) # we set the cyclic period of the seasonal cycle by hand
+        trend_estimate = ts_decomp_column.trend
+        seasonal_estimate = ts_decomp_column.seasonal
+        residual_estimate = ts_decomp_column.resid
 
+        # Plotting the time series and its individual components together
+        fig, ax = plt.subplots(4, 1, sharex=True, sharey=False)
+        #fig, ax = plt.subplots(5, 1, sharex=True, sharey=False)
 
+        fig.set_figheight(10)
+        fig.set_figwidth(20)
+
+        ax[0].plot(df[column], label='Original')
+        ax[0].legend(loc='upper left')
+
+        ax[1].plot(trend_estimate, label='Trend')
+        ax[1].legend(loc='upper left')
+
+        ax[2].plot(seasonal_estimate, label='Seasonality')
+        ax[2].legend(loc='upper left')
+
+        ax[3].plot(residual_estimate, label='Residuals')
+        ax[3].legend(loc='upper left')
