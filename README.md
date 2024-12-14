@@ -1,7 +1,7 @@
 # Calisma
 
 Welcome to the Calisma Project repository. 
-In the current project, we aim to assess the relationship of 'liquid water path (lwp)' with other variables with other cloud variables.
+In the current project, we aim to assess the relationship of 'liquid water path (lwp)' with other atmospheric variables.
 
 
 First, create the conda environment and install dependencies by running the following script:
