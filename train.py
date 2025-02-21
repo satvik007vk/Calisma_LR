@@ -5,10 +5,13 @@ from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
 import shap
 import matplotlib.pyplot as plt
+from pathlib import Path
+
+ROOT_DIR = Path(__file__).parent
 
 # Load train and test datasets
-df_train = pd.read_csv("train_data.csv")
-df_test = pd.read_csv("test_data.csv")
+df_train = pd.read_csv(ROOT_DIR/'Daten'/'train_test'/'train_data.csv')
+df_test = pd.read_csv(ROOT_DIR/'Daten'/'train_test'/'test_data.csv')
 
 # # Convert to pandas DataFrame
 # df_train = ds_train.to_dataframe().reset_index()
@@ -30,7 +33,7 @@ y_test = df_test[predictands]
 print(f'Train NaNs:\n{y_train.isna().sum()}')
 print(f'Test NaNs:\n{y_test.isna().sum()}')
 
-mlr_model = M
+#mlr_model = M
 
 # Initialize and train Random Forest model
 rf_model = RandomForestRegressor(n_estimators=100, random_state=42)
