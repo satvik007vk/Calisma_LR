@@ -9,9 +9,10 @@ import shap
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).parent
+ROOT_DIR = Path(__file__).resolve().parent
 
-def load_train_test_data():
+def load_train_test_data(predictand: str='both'):
+    """ predictand = 'clf' or 'lwp' or 'both'   """
 
     df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / 'train_data.csv')
     df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / 'test_data.csv')
@@ -22,18 +23,29 @@ def load_train_test_data():
 
     print("Train and test data loaded successfully! Missing values dropped.")
 
-    # Define predictors (X) and targets (y)
-    predictands = ['clf', 'lwp']  # Variables we want to predict
-    predictors = [var for var in df_train.columns if var not in predictands + ['time', 'lat', 'lon']]
+    if predictand == 'both':
+        predictand = ['clf', 'lwp']
+        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']]
+
+    elif predictand == 'clf':
+        predictand = ['clf']
+        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']+['lwp']]
+
+
+    elif predictand == 'lwp':
+        predictand = ['lwp']
+        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']+['clf']]
+    #
+    # predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']]
 
     # Split into X and y
     X_train = df_train[predictors]
-    y_train = df_train[predictands]
+    y_train = df_train[predictand]
     X_test = df_test[predictors]
-    y_test = df_test[predictands]
+    y_test = df_test[predictand]
 
     #TODO - Fix the return variables
-    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands
+    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictand
 
 def train_mlr(X_train, y_train):
     mlr_model  = LinearRegression()
@@ -74,7 +86,9 @@ def shap_explainability(model, X_train, X_test):
 
 if __name__ == "__main__":
     # Load Data
-    df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands = load_train_test_data()
+    df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands = load_train_test_data(predictand='lwp')
+
+    print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
 
     # Train Models
     mlr_model = train_mlr(X_train, y_train)
