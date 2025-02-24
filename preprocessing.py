@@ -70,7 +70,7 @@ df_scaled = df_scaled.sort_values('time')
 time_values = df_scaled['time'].unique()
 
 # ✅ Compute split index (80% train, 20% test)
-split_index = int(len(time_values) * 0.8)
+split_index = int(len(time_values) * 0.67)
 train_time = time_values[:split_index]
 test_time = time_values[split_index:]
 
@@ -88,8 +88,10 @@ print(f"Testing data shape: {df_test.shape}")
 print("Checking missing values before saving:")
 print(df_scaled.isnull().sum())
 
-# ✅ Save train and test datasets as CSV (instead of NetCDF)
-df_train.to_csv("train_data.csv", index=False)
-df_test.to_csv("test_data.csv", index=False)
+#TODO - find a way to access datasets without saving them as files
 
-print("Train and test datasets saved successfully!")
+# ✅ Save train and test datasets as CSV
+# df_train.to_csv("train_data.csv", index=False)
+# df_test.to_csv("test_data.csv", index=False)
+#
+# print("Train and test datasets saved successfully!")
