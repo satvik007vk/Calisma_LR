@@ -2,6 +2,7 @@ name: calisma
 channels:
   - defaults
   - conda-forge
+# To update this regularly, or find a way to automaticall update as soon as a package is installed.
 dependencies:
   - python=3.11.5
   - pandas=2.2.2
