@@ -8,7 +8,7 @@
 - [x] The cloud fraction and liquid water path were plotted against time
 
 Questions:
-- Shall visual analyses help in any sort of data preparation or is it just an overview of Data?
+- Shall visual analyses be used to make any decisions in data preparation or is it just an overview of Data?
 
 ### Preparing Dataset
 - [x] Scale the Variables using Standard/Min-Max Scaling. 

@@ -1,8 +1,11 @@
+from cProfile import label
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 import cartopy.crs as ccrs
 import cartopy.feature as cfeature
+from bokeh.layouts import column
 from statsmodels.tsa.seasonal import seasonal_decompose
 import xarray as xr
 
@@ -60,8 +63,16 @@ class PlotData:
     #     plt.ylabel('Latitude')
     #     plt.grid()
     #     plt.show()
-    # 
-    def spatial_plot_on_map(df, column: str, title, cmap, colorbar_label):
+    #
+
+    #TODO- Fix plotting on world map
+    def spatial_plot_on_map(df, column: str, title=None, cmap='viridis', colorbar_label=None):
+
+        if title is None:
+            title = f'Mean {column} '
+        if colorbar_label is None:
+            colorbar_label = column
+
         plt.figure(figsize=(12, 8))
         ax = plt.axes(projection=ccrs.PlateCarree())
         ax.set_global()
@@ -170,7 +181,7 @@ class PlotData:
     #     ax[3].legend(loc='upper left')
 
 
-
+#Calling functions and plotting
 file = "./Daten/se_atlantic_df.csv"
 df = pd.read_csv(file, index_col='time')
 df
@@ -187,5 +198,5 @@ df.set_index(['time', 'lon', 'lat'], inplace=True)
 # Step 4: Convert the DataFrame to an xarray Dataset
 ds = xr.Dataset.from_dataframe(df)
 
-clf_plot = PlotData(column='clf', ds=ds)
-clf_plot.temporalplot2(column='clf')
+lwp_plot = PlotData(column='lwp', ds=ds)
+lwp_plot.temporalplot2(column='lwp')
