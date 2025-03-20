@@ -5,7 +5,7 @@ from train_and_evaluate import load_train_test_data, train_mlr, get_mlr_coeffici
 
 # Load data again (to get df_train)
 #TODO - improve the function definition to only choose predictand among the given values
-predictand: str = 'clf'  # 'lwp' or 'clf' or 'both'
+predictand: str = 'both'  # 'lwp' or 'clf' or 'both'
 
 df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands = load_train_test_data(
     predictand=predictand)

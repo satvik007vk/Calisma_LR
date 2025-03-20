@@ -15,7 +15,7 @@ aggregated_df = df.groupby(['time', 'lat', 'lon']).median().reset_index()
 
 print(f'Null values after aggregation to median\n{aggregated_df.isnull().sum()}')
 
-# ✅ REMOVE xarray conversion
+# xarray conversion not needed
 # ds = aggregated_df.set_index(['time','lat','lon']).to_xarray()
 
 # Check for NULL values
@@ -24,7 +24,7 @@ print(f'Null Values:\n{aggregated_df.isnull().sum()}')
 predictands = ['clf', 'lwp']  # Output variables
 predictors = [var for var in aggregated_df.columns if var not in predictands + ['time', 'lat', 'lon']]  # Predictor variables
 
-# ✅ Standard Scaler function (Now works on pandas DataFrame)
+# ✅ Standard Scaler function ( works on pandas DataFrame instead of ds)
 def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True) -> pd.DataFrame:
     if scalertype == 'standard':
         scaler = StandardScaler()
@@ -51,7 +51,7 @@ df_scaled = scale_df(aggregated_df, 'standard')
 for var in predictors:
     print(f" Standard Scaled: {var}: mean={df_scaled[var].mean():.2f}, std={df_scaled[var].std():.2f}")
 
-# ✅ Correlation Check (Using pandas instead of xarray)
+# ✅ Correlation Check (Using pandas)
 def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
     correlation_method = correlation_method.lower()
     corr_matrix = df_scaled[predictors].corr(method=correlation_method)
@@ -63,14 +63,14 @@ def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
 
 compute_correlation(df_scaled)
 
-# ✅ Ensure time is sorted
+# ✅ Time-based split
 df_scaled = df_scaled.sort_values('time')
 
 # ✅ Get time values
 time_values = df_scaled['time'].unique()
 
 # ✅ Compute split index (80% train, 20% test)
-split_index = int(len(time_values) * 0.67)
+split_index = int(len(time_values) * 0.80)
 train_time = time_values[:split_index]
 test_time = time_values[split_index:]
 
