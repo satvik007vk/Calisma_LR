@@ -10,15 +10,13 @@ from statsmodels.tsa.seasonal import seasonal_decompose
 import xarray as xr
 
 
-
-
 class PlotData:
     def __init__(self, column: str='lwp', ds: xr.Dataset = None):
         self.column = column
         self.ds = ds
 
     #'@staticmethod
-    def temporalplot(self, column: str = 'clf'):
+    def temporalplot(self, column: str = 'lwp'):
         column_mean = self.ds[column].mean(dim=['lat', 'lon'])
 
         plt.figure(figsize=(12, 6))
@@ -28,7 +26,7 @@ class PlotData:
         plt.ylabel(f'Mean {column}')
         plt.show()
 
-    def temporalplot2(self, column: str='clf'):
+    def temporalplot2(self, column: str='lwp'):
         # Check and clean coordinate types
         try:
             time_coord = self.ds['time']
@@ -54,18 +52,22 @@ class PlotData:
         plt.ylabel(f"Mean {column}")
         plt.show()
 
-        # def spatial_plot(column: str):
-    #     plt.figure(figsize=(10, 8))
-    #     sc = plt.scatter(df['lon'], df['lat'], c=df[column], cmap='viridis', alpha=0.7)
-    #     plt.colorbar(sc, label=column)
-    #     plt.title(f"Spatial Distribution of {column}")
-    #     plt.xlabel('Longitude')
-    #     plt.ylabel('Latitude')
-    #     plt.grid()
-    #     plt.show()
+
+
+    def spatialplot(self, column: str='lwp'):
+        time_avg = self.ds[column].mean(dim=['time'])
+        plt.figure(figsize=(12, 6))
+        time_avg.plot(x='lon', y='lat', robust=True)
+        # sc = plt.scatter(df['lon'], df['lat'], c=df[column], cmap='viridis', alpha=0.7)
+        # plt.colorbar(sc, label=column)
+        plt.title(f"Spatial Distribution of {column}")
+        plt.xlabel('Longitude')
+        plt.ylabel('Latitude')
+        plt.tight_layout()
+        plt.grid()
+        plt.show()
     #
 
-    #TODO- Fix plotting on world map
     def spatial_plot_on_map(df, column: str, title=None, cmap='viridis', colorbar_label=None):
 
         if title is None:
@@ -181,22 +183,22 @@ class PlotData:
     #     ax[3].legend(loc='upper left')
 
 
-#Calling functions and plotting
-file = "./Daten/se_atlantic_df.csv"
-df = pd.read_csv(file, index_col='time')
-df
-
-import xarray as xr
-
-
-# Step 2: Aggregate duplicate rows by taking the mean of each group
-df = df.groupby(['time', 'lon', 'lat']).mean().reset_index()
-
-# Step 3: Set the index of the DataFrame to 'time', 'lon', and 'lat'
-df.set_index(['time', 'lon', 'lat'], inplace=True)
-
-# Step 4: Convert the DataFrame to an xarray Dataset
-ds = xr.Dataset.from_dataframe(df)
-
-lwp_plot = PlotData(column='lwp', ds=ds)
-lwp_plot.temporalplot2(column='lwp')
+# #Calling functions and plotting
+# file = "./Daten/se_atlantic_df.csv"
+# df = pd.read_csv(file, index_col='time')
+# df
+#
+# import xarray as xr
+#
+#
+# # Step 2: Aggregate duplicate rows by taking the mean of each group
+# df = df.groupby(['time', 'lon', 'lat']).mean().reset_index()
+#
+# # Step 3: Set the index of the DataFrame to 'time', 'lon', and 'lat'
+# df.set_index(['time', 'lon', 'lat'], inplace=True)
+#
+# # Step 4: Convert the DataFrame to an xarray Dataset
+# ds = xr.Dataset.from_dataframe(df)
+#
+# lwp_plot = PlotData(column='lwp', ds=ds)
+# lwp_plot.temporalplot2(column='lwp')
