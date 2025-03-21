@@ -29,4 +29,4 @@ The predictand could be choosen as clf, lwp or both. The preictors remain fixed 
 - shap_explainability model
 
 ### 4) Visual Data Analyses (Post-training)
-- some functions to visualise the results of training models (eg: plot to see variable contribution as determined by mlr)
+- The script [post_train_plot.py](post_train_plot.py) contain some functions to visualise the results of training models (eg: plot to see variable contribution as determined by mlr)
