@@ -66,15 +66,15 @@ compute_correlation(df_scaled)
 # ✅ Time-based split
 df_scaled = df_scaled.sort_values('time')
 
-# ✅ Get time values
+# Get time values
 time_values = df_scaled['time'].unique()
 
-# ✅ Compute split index (80% train, 20% test)
+# Compute split index (80% train, 20% test)
 split_index = int(len(time_values) * 0.80)
 train_time = time_values[:split_index]
 test_time = time_values[split_index:]
 
-# ✅ Split dataset using pandas
+# Split dataset using pandas
 df_train = df_scaled[df_scaled['time'].isin(train_time)]
 df_test = df_scaled[df_scaled['time'].isin(test_time)]
 
