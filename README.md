@@ -4,16 +4,17 @@ Welcome to the Calisma Project repository.
 Below are the instructions to run the analyses
 
 
-First, create the conda environment and install dependencies by running the following script:
+First, create the conda environment and install dependencies by running the following script:</br>
 `conda env create -f environment.yml` 
 
-Then, activate your environment using:
+Then, activate your environment using:</br>
 `conda activate calisma`
 Select this [conda environment as your python interpreter.](https://www.google.com/search?q=select+existing+conda+environment+as+python+interpreter&client=ubuntu-sn&hs=rkJ&sca_esv=63c9e37f8da915f5&channel=fs&sxsrf=AHTn8zqxaLTBEhH0yx9c5RTSDwiCU5Jqzw%3A1742553270476&ei=tkDdZ87cHIWui-gP_4WP6QE&ved=0ahUKEwjOj8Hl_JqMAxUF1wIHHf_CIx0Q4dUDCBA&uact=5&oq=select+existing+conda+environment+as+python+interpreter&gs_lp=Egxnd3Mtd2l6LXNlcnAiN3NlbGVjdCBleGlzdGluZyBjb25kYSBlbnZpcm9ubWVudCBhcyBweXRob24gaW50ZXJwcmV0ZXIyBRAAGO8FMgUQABjvBTIFEAAY7wUyBRAAGO8FMggQABiiBBiJBUiHGVCzBVipEnABeAGQAQCYAYYBoAGiBqoBAzYuM7gBA8gBAPgBAZgCCaACtgbCAgoQABiwAxjWBBhHwgIHECMYsAIYJ8ICCBAAGIAEGKIEmAMAiAYBkAYIkgcDNS40oAe4ObIHAzQuNLgHrAY&sclient=gws-wiz-serp)
 
+### Below is the recommended order for analyses.
+
 ### 1) Visual Data Analyses (Pre-training)
 The Jupyter notebook [pre_plot_analyses.ipynb](pre_plot_analyses.ipynb) will output data statistics and the temporal and spatial distribution of variables.
-
 
 ### 2) Data Preprocessing
 The script [preprocessing.py](preprocessing.py) scales the dataset, compute correlation and does a simple dataset split using a given time. </br>
@@ -29,4 +30,11 @@ The predictand/s could be chosen as clf, lwp or both. The predictors remain fixe
 - shap_explainability model (needs troubleshooting)
 
 ### 4) Visual Data Analyses (Post-training)
-- The script [post_train_plot.py](post_train_plot.py) contain functions to visualise the results of training models (eg: plot to see variable contribution as determined by mlr)
+The script [train_evaluate_analyses.ipynb](train_evaluate_analyses.ipynb) calls the functions from other python scripts to </br>
+- Evaluate the results of training models and some visual plots
+
+## Contributing to this repository
+
+To contribute to this project, create a new branch using: </br>
+`git checkout -b <branch_name>` </br>
+Commit and push your edits to this new branch. And then create a pull request on Github.

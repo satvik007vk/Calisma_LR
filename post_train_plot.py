@@ -59,7 +59,7 @@ def plot_scatter_relationships(df_train, mlr_coefficients):
         plt.tight_layout()
         plt.show()
 
-
-if __name__ == "__main__":
-    plot_coefficients(mlr_coefficients)
-#    plot_scatter_relationships(df_train, mlr_coefficients)
+#
+# if __name__ == "__main__":
+#     plot_coefficients(mlr_coefficients)
+# #    plot_scatter_relationships(df_train, mlr_coefficients)
