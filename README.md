@@ -11,7 +11,7 @@ Then, activate your environment using:</br>
 `conda activate calisma`
 Select this [conda environment as your python interpreter.](https://www.google.com/search?q=select+existing+conda+environment+as+python+interpreter&client=ubuntu-sn&hs=rkJ&sca_esv=63c9e37f8da915f5&channel=fs&sxsrf=AHTn8zqxaLTBEhH0yx9c5RTSDwiCU5Jqzw%3A1742553270476&ei=tkDdZ87cHIWui-gP_4WP6QE&ved=0ahUKEwjOj8Hl_JqMAxUF1wIHHf_CIx0Q4dUDCBA&uact=5&oq=select+existing+conda+environment+as+python+interpreter&gs_lp=Egxnd3Mtd2l6LXNlcnAiN3NlbGVjdCBleGlzdGluZyBjb25kYSBlbnZpcm9ubWVudCBhcyBweXRob24gaW50ZXJwcmV0ZXIyBRAAGO8FMgUQABjvBTIFEAAY7wUyBRAAGO8FMggQABiiBBiJBUiHGVCzBVipEnABeAGQAQCYAYYBoAGiBqoBAzYuM7gBA8gBAPgBAZgCCaACtgbCAgoQABiwAxjWBBhHwgIHECMYsAIYJ8ICCBAAGIAEGKIEmAMAiAYBkAYIkgcDNS40oAe4ObIHAzQuNLgHrAY&sclient=gws-wiz-serp)
 
-### Below is the recommended order for analyses.
+## Running the Code
 
 ### 1) Visual Data Analyses (Pre-training)
 The Jupyter notebook [pre_plot_analyses.ipynb](pre_plot_analyses.ipynb) will output data statistics and the temporal and spatial distribution of variables.
@@ -33,7 +33,7 @@ The predictand/s could be chosen as clf, lwp or both. The predictors remain fixe
 The script [train_evaluate_analyses.ipynb](train_evaluate_analyses.ipynb) calls the functions from other python scripts to </br>
 - Evaluate the results of training models and some visual plots
 
-## Contributing to this repository
+## Contributing to the repository
 
 To contribute to this project, create a new branch using: </br>
 `git checkout -b <branch_name>` </br>
