@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from xgboost import XGBRegressor
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, root_mean_squared_error
 import shap
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -66,12 +66,12 @@ def train_xgboost(X_train, y_train):
 def evaluate_model(model, X_test, y_test, model_name):
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
-    rmse = np.sqrt(mse)
+    rmse = root_mean_squared_error(y_test, y_pred)
 
     print(f"{model_name} MSE: {mse}")
     print(f"{model_name} RMSE: {rmse}")
 
-    return mse, rmse, y_pred
+    return mse, rmse
 
 def get_mlr_coefficients(mlr_model, predictors, predictands):
     mlr_coefficients_df = pd.DataFrame(mlr_model.coef_, index=predictands, columns=predictors)
