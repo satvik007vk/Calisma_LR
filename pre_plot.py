@@ -60,7 +60,7 @@ class PlotData:
         time_avg.plot(x='lon', y='lat', robust=True)
         # sc = plt.scatter(df['lon'], df['lat'], c=df[column], cmap='viridis', alpha=0.7)
         # plt.colorbar(sc, label=column)
-        plt.title(f"Spatial Distribution of {column}")
+        plt.title(f"Spatial Distribution of {column} (Zoomed)")
         plt.xlabel('Longitude')
         plt.ylabel('Latitude')
         plt.tight_layout()
@@ -156,31 +156,31 @@ class PlotData:
         plt.show()
     # 
     # 
-    # def ts_decompose(column: str):
-    #     ts_decomp_column = seasonal_decompose(df[column], model='additive', period=12,
-    #                                    extrapolate_trend='freq')  #period = 12) # we set the cyclic period of the seasonal cycle by hand
-    #     trend_estimate = ts_decomp_column.trend
-    #     seasonal_estimate = ts_decomp_column.seasonal
-    #     residual_estimate = ts_decomp_column.resid
-    # 
-    #     # Plotting the time series and its individual components together
-    #     fig, ax = plt.subplots(4, 1, sharex=True, sharey=False)
-    #     #fig, ax = plt.subplots(5, 1, sharex=True, sharey=False)
-    # 
-    #     fig.set_figheight(10)
-    #     fig.set_figwidth(20)
-    # 
-    #     ax[0].plot(df[column], label='Original')
-    #     ax[0].legend(loc='upper left')
-    # 
-    #     ax[1].plot(trend_estimate, label='Trend')
-    #     ax[1].legend(loc='upper left')
-    # 
-    #     ax[2].plot(seasonal_estimate, label='Seasonality')
-    #     ax[2].legend(loc='upper left')
-    # 
-    #     ax[3].plot(residual_estimate, label='Residuals')
-    #     ax[3].legend(loc='upper left')
+    def ts_decompose(df, column: str):
+        ts_decomp_column = seasonal_decompose(df[column], model='additive', period=12,
+                                       extrapolate_trend='freq')  #period = 12) # we set the cyclic period of the seasonal cycle by hand
+        trend_estimate = ts_decomp_column.trend
+        seasonal_estimate = ts_decomp_column.seasonal
+        residual_estimate = ts_decomp_column.resid
+
+        # Plotting the time series and its individual components together
+        fig, ax = plt.subplots(4, 1, sharex=True, sharey=False)
+        #fig, ax = plt.subplots(5, 1, sharex=True, sharey=False)
+
+        fig.set_figheight(10)
+        fig.set_figwidth(20)
+
+        ax[0].plot(df[column], label='Original')
+        ax[0].legend(loc='upper left')
+
+        ax[1].plot(trend_estimate, label='Trend')
+        ax[1].legend(loc='upper left')
+
+        ax[2].plot(seasonal_estimate, label='Seasonality')
+        ax[2].legend(loc='upper left')
+
+        ax[3].plot(residual_estimate, label='Residuals')
+        ax[3].legend(loc='upper left')
 
 
 # #Calling functions and plotting
