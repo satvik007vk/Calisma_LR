@@ -21,7 +21,8 @@ The script [preprocessing.py](preprocessing.py) scales the dataset, compute corr
 To save the training and test datasets in your locally, remove comments from the last part of code.
 
 ### 3) Training and Evaluation
-The script [train_and_evaluate.py](train_and_evaluate.py) has following parts:
+The script [train_and_evaluate.py](train_and_evaluate.py) contain the following parts: </br>
+(Paths to the newly saved train and test datasets from step 2 needs to be updated for running further code) 
 - Function to load train-test data and determine the predictors(X) and predictands(y). 
 The predictand/s could be chosen as clf, lwp or both. The predictors remain fixed as all other variables.
 - Functions to train different models.
