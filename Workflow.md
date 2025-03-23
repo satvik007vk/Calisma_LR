@@ -13,11 +13,12 @@ Questions:
 ### Preparing Dataset
 
 - [x] Scale the Variables using Standard/Min-Max Scaling.
+- [ ] #TODO - remove outliers
 - [x] Split the variables into train-test by a time to avoid overlap of both the sets. 
 - [x] Feed them into the ML models multiple linear regression, XG boost, random forest.
 
 Questions:
-- should the predictands ('lwp' and 'clf') be scaled as well?)
+- should the predictands ('lwp' and 'clf') be scaled as well?
 - What is the effort value of trying to do a better split (Rolling window split, timeseries split etc.)-
 https://medium.com/@mouadenna/time-series-splitting-techniques-ensuring-accurate-model-validation-5a3146db3088
 - There are only a few correlated variables (rh850-q850 (0.9),tcwv-q700,q850,rh700 (0.8)- but these are not handled now in preprocessing. Should some preprocessing involve changing these?
