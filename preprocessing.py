@@ -1,4 +1,5 @@
 import pandas as pd
+from IPython.core.pylabtools import figsize
 from sklearn.preprocessing import StandardScaler, MinMaxScaler
 import numpy as np
 import seaborn as sns
@@ -23,6 +24,96 @@ print(f'Null Values:\n{aggregated_df.isnull().sum()}')
 
 predictands = ['clf', 'lwp']  # Output variables
 predictors = [var for var in aggregated_df.columns if var not in predictands + ['time', 'lat', 'lon']]  # Predictor variables
+
+#Outliers Removal
+
+y='lwp'
+#predictands = [y]
+#aggregated_df.plot(y=y, figsize=(10, 5))
+sns.boxplot(data=aggregated_df[predictands])
+
+plt.title(f"{predictands} before outliers removed")
+plt.show()
+
+def remove_outliers_iqr(
+        df: pd.DataFrame,
+        columns=None,  # Require explicit column list (no ambiguous default)
+        iqr_coef: float = 1.5  # Standard Tukey's fence coefficient
+) -> pd.DataFrame:
+    """
+    Removes outliers using IQR method for specified columns.
+
+    Args:
+        df: Input DataFrame
+        columns: List of columns to process
+        iqr_coef: Multiplier for IQR (default 1.5 for moderate outliers)
+
+    Returns:
+        DataFrame with outliers removed
+    """
+    if columns is None:
+        columns = predictands
+    df_filtered = df.copy()
+
+    for col in columns:
+        Q1 = df_filtered[col].quantile(0.25)
+        Q3 = df_filtered[col].quantile(0.75)
+        IQR = Q3 - Q1
+
+        lower_bound = Q1 - iqr_coef * IQR
+        upper_bound = Q3 + iqr_coef * IQR
+
+        mask = df_filtered[col].between(lower_bound, upper_bound)
+        df_filtered = df_filtered[mask]
+
+    return df_filtered
+
+
+def remove_outliers_percentile(
+        df: pd.DataFrame,
+        columns=None,
+        lower_percentile: float = 0.03,
+        upper_percentile: float = 0.97
+) -> pd.DataFrame:
+    """
+    Removes outliers using percentile-based trimming for specified columns.
+
+    Args:
+        df: Input DataFrame
+        columns: List of columns to process (default: ['clf', 'lwp'])
+        lower_percentile: Lower cutoff percentile (e.g., 0.03 for 3rd percentile)
+        upper_percentile: Upper cutoff percentile (e.g., 0.97 for 97th percentile)
+
+    Returns:
+        DataFrame with outliers removed
+    """
+    if columns is None:
+        columns = predictands
+    df_filtered = df.copy()
+
+    for col in columns:
+        lower_bound = df_filtered[col].quantile(lower_percentile)
+        upper_bound = df_filtered[col].quantile(upper_percentile)
+        mask = df_filtered[col].between(lower_bound, upper_bound)
+        df_filtered = df_filtered[mask]
+
+    return df_filtered
+
+
+# calling outlier removal function
+filtered_df = remove_outliers_percentile(
+    aggregated_df,
+    columns=predictands  # Or explicitly: columns=['clf', 'lwp']
+)
+
+aggregated_df=filtered_df
+
+y='lwp'
+#predictands=[y]
+#aggregated_df.plot(y=y, figsize=(10,5))
+sns.boxplot(data=aggregated_df[predictands])
+plt.title(f"{predictands} after outliers removed")
+plt.show()
 
 # ✅ Standard Scaler function ( works on pandas DataFrame instead of ds)
 def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True) -> pd.DataFrame:
@@ -90,7 +181,7 @@ print(df_scaled.isnull().sum())
 
 #TODO - find a way to access datasets without saving them as files
 
-# ✅ Save train and test datasets as CSV
+#✅ Save train and test datasets as CSV
 # df_train.to_csv("train_data.csv", index=False)
 # df_test.to_csv("test_data.csv", index=False)
 #
