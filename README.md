@@ -5,6 +5,7 @@ Welcome to the Calisma Project repository.
 ## Environment Setup
 
 First, create the conda environment and install dependencies by running the following script:</br>
+(you should have conda and python installed to run this) </br>
 `conda env create -f environment.yml` 
 
 Then, activate your environment using:</br>
