@@ -17,7 +17,11 @@ Select this [conda environment as your python interpreter.](https://www.google.c
 The Jupyter notebook [pre_plot_analyses.ipynb](pre_plot_analyses.ipynb) will output data statistics and the temporal and spatial distribution of variables.
 
 ### 2) Data Preprocessing
-The script [preprocessing.py](preprocessing.py) scales the dataset, compute correlation and does a simple dataset split using a given time. </br>
+The script [preprocessing.py](preprocessing.py) contains some functions to
+- Remove Outliers
+- Scale the dataset, 
+- Compute correlation
+- Split using a fixed time value. </br>
 To save the training and test datasets in your locally, remove comments from the last part of code.
 
 ### 3) Training and Evaluation
