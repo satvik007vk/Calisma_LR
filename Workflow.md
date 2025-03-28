@@ -3,7 +3,6 @@
 
 ### Visualisation
 
-- [x] The CSV was converted to Xarray with dimensions as time, latitude, and longitude.
 - [x] Analyse temporal distribution by taking a mean (or a median) across latitudes and longitudes.
 - [x] Analyse spatial distribution by taking a mean (or a median) across all time.
 

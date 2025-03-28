@@ -14,14 +14,17 @@ Select this [conda environment as your python interpreter.](https://www.google.c
 ## Code Walkthrough:
 
 ### 1) Visual Data Analyses (Pre-training)
-The Jupyter notebook [pre_plot_analyses.ipynb](pre_plot_analyses.ipynb) will output data statistics and the temporal and spatial distribution of variables.
+The Jupyter notebook [pre_plot_analyses.ipynb](pre_plot_analyses.ipynb) performs following tasks:
+- Data conversion (to Xarrays for better visualisation)
+- Data statistics (mean, std, etc.)
+- Map temporal and spatial distribution of variables
 
 ### 2) Data Preprocessing
-The script [preprocessing.py](preprocessing.py) contains some functions to
+The script [preprocessing.py](preprocessing.py) contains functions to
 - Remove Outliers
-- Scale the dataset, 
+- Scale the dataset 
 - Compute correlation
-- Split using a fixed time value. </br>
+- Split using a fixed time value </br>
 To save the training and test datasets in your locally, remove comments from the last part of code.
 
 ### 3) Training and Evaluation
@@ -37,7 +40,7 @@ The predictand/s could be chosen as clf, lwp or both. The predictors remain fixe
 ### 4) Visual Data Analyses (Post-training)
 The script [train_evaluate_analyses.ipynb](train_evaluate_analyses.ipynb) calls the functions from other python scripts to </br>
 - Evaluate the results of training models and some visual plots
-- Some results are documented and stored in [results.md](results.md) file.
+- Some significant results are documented in [results.md](results.md) file.
 
 ## Contributing to the repository
 
