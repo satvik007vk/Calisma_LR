@@ -101,7 +101,7 @@ def remove_outliers_percentile(
 
 
 # calling outlier removal function
-filtered_df = remove_outliers_percentile(
+filtered_df = remove_outliers_iqr(
     aggregated_df,
     columns=predictands  # Or explicitly: columns=['clf', 'lwp']
 )
