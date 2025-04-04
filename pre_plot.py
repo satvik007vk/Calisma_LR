@@ -8,6 +8,7 @@ import cartopy.feature as cfeature
 from bokeh.layouts import column
 from statsmodels.tsa.seasonal import seasonal_decompose
 import xarray as xr
+import calendar
 
 
 class PlotData:
@@ -16,17 +17,9 @@ class PlotData:
         self.ds = ds
 
     #'@staticmethod
-    def temporalplot(self, column: str = 'lwp'):
-        column_mean = self.ds[column].mean(dim=['lat', 'lon'])
 
-        plt.figure(figsize=(12, 6))
-        column_mean.plot()
-        plt.title(f'Mean {column} across time')
-        plt.xlabel('Time')
-        plt.ylabel(f'Mean {column}')
-        plt.show()
 
-    def temporalplot2(self, column: str='lwp'):
+    def temporalplot2 (self, column: str='lwp'):
         # Check and clean coordinate types
         try:
             time_coord = self.ds['time']
@@ -52,7 +45,29 @@ class PlotData:
         plt.ylabel(f"Mean {column}")
         plt.show()
 
+    def temporalplot_grouped (self, column: str = 'lwp', groupby: str = 'monthly'):
+        column_mean = self.ds[column].mean(dim=['lat', 'lon'])
 
+        plt.figure(figsize=(12, 6))
+
+        if groupby == 'monthly':
+            # Calculate monthly averages across years
+            monthly_avg = column_mean.groupby('time.month').mean()
+            monthly_avg.plot()
+
+            # Format x-axis with month names
+            plt.xticks(range(1, 13), calendar.month_abbr[1:13])
+            plt.title(f'Monthly Average {column}')
+            plt.xlabel('Month')
+        else:
+            # Original time series plot
+            column_mean.plot()
+            plt.title(f'Mean {column} across time')
+            plt.xlabel('Time')
+
+        plt.ylabel(f'Mean {column}')
+        plt.tight_layout()
+        plt.show()
 
     def spatialplot(self, column: str='lwp'):
         time_avg = self.ds[column].mean(dim=['time'])
@@ -183,6 +198,48 @@ class PlotData:
         ax[3].legend(loc='upper left')
 
 
+    def ts_decompose_group(df, column: str, groupby='monthly'):
+        # Ensure datetime index
+        df = df.set_index('time')
+
+        # Perform decomposition
+        ts_decomp_column = seasonal_decompose(df[column], model='additive',
+                                              period=12, extrapolate_trend='freq')
+
+        # Extract components
+        components = {
+            'original': df[column],
+            'trend': ts_decomp_column.trend,
+            'seasonal': ts_decomp_column.seasonal,
+            'residual': ts_decomp_column.resid
+        }
+
+        # Group by month if specified
+        if groupby == 'monthly':
+            components = {
+                key: comp.groupby(comp.index.month).mean()
+                for key, comp in components.items()
+            }
+
+        # Plot configuration
+        fig, ax = plt.subplots(4, 1, figsize=(20, 10))
+        titles = ['Original Series', 'Trend Component',
+                  'Seasonal Component', 'Residual Component']
+
+        for i, (key, title) in enumerate(zip(components.keys(), titles)):
+            ax[i].plot(components[key] if not groupby else components[key].index,
+                       components[key], label=title)
+
+            if groupby == 'monthly':
+                ax[i].set_xticks(range(1, 13))
+                ax[i].set_xticklabels(calendar.month_abbr[1:13])
+                ax[i].set_xlabel('Month')
+
+            ax[i].legend(loc='upper left')
+            ax[i].grid(True)
+
+        plt.tight_layout()
+        return fig
 # #Calling functions and plotting
 # file = "./Daten/se_atlantic_df.csv"
 # df = pd.read_csv(file, index_col='time')
