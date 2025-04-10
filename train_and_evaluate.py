@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error, root_mean_squared_error
 import shap
 import matplotlib.pyplot as plt
 from pathlib import Path
+from sklearn.neural_network import MLPRegressor
 
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -44,7 +45,7 @@ def load_train_test_data(predictand: str='both'):
     X_test = df_test[predictors]
     y_test = df_test[predictand]
 
-    #TODO - Fix the return variables
+
     return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictand
 
 def train_mlr(X_train, y_train):
@@ -62,6 +63,10 @@ def train_xgboost(X_train, y_train):
     xgb_model.fit(X_train, y_train)
     return xgb_model
 
+def train_mlp_regressor(X_train, y_train):
+    mlp_regressor_model = MLPRegressor(hidden_layer_sizes=(100,), random_state=42)
+    mlp_regressor_model.fit(X_train, y_train)
+    return mlp_regressor_model
 
 def evaluate_model(model, X_test, y_test, model_name):
     y_pred = model.predict(X_test)
