@@ -89,17 +89,17 @@ def shap_explainability(model, X_train, X_test):
     shap.summary_plot(shap_values, X_test)
 
 
-if __name__ == "__main__":
-    # Load Data
-    df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands = load_train_test_data(predictand='lwp')
-
-    print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
-
-    # Train Models
-    mlr_model = train_mlr(X_train, y_train)
-
-    # Evaluate Models
-    evaluate_model(mlr_model, X_test, y_test, "Multi-Linear Regression")
-
-    # Get Coefficients
-    mlr_coefficients = get_mlr_coefficients(mlr_model, predictors, predictands)
+# if __name__ == "__main__":
+#     # Load Data
+#     df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands = load_train_test_data(predictand='lwp')
+#
+#     print(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
+#
+#     # Train Models
+#     mlr_model = train_mlr(X_train, y_train)
+#
+#     # Evaluate Models
+#     evaluate_model(mlr_model, X_test, y_test, "Multi-Linear Regression")
+#
+#     # Get Coefficients
+#     mlr_coefficients = get_mlr_coefficients(mlr_model, predictors, predictands)
