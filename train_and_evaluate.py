@@ -3,12 +3,14 @@ import xarray as xr
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
+from sklearn.multioutput import MultiOutputRegressor
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error, root_mean_squared_error
 import shap
 import matplotlib.pyplot as plt
 from pathlib import Path
 from sklearn.neural_network import MLPRegressor
+from sklearn.multioutput import MultiOutputRegressor
 
 ROOT_DIR = Path(__file__).resolve().parent
 
@@ -67,6 +69,22 @@ def train_mlp_regressor(X_train, y_train):
     mlp_regressor_model = MLPRegressor(hidden_layer_sizes=(100,), random_state=42)
     mlp_regressor_model.fit(X_train, y_train)
     return mlp_regressor_model
+
+def train_multioutput_regressor (X_train, y_train, regressor_model ):
+
+    if regressor_model == 'random_forest':
+        regressor = RandomForestRegressor(n_estimators=100, random_state=42)
+    elif regressor_model == 'xgboost':
+        regressor = XGBRegressor(n_estimators=100, learning_rate=0.1, random_state=42)
+    elif regressor_model == 'mlp':
+        regressor = MLPRegressor(hidden_layer_sizes=(100,), random_state=42)
+    elif regressor_model == 'lr':
+        regressor = MultiOutputRegressor()
+    
+    multioutput_regressor_model = MultiOutputRegressor(estimator=regressor)
+
+    multioutput_regressor_model.fit(X_train, y_train)
+    return multioutput_regressor_model
 
 def evaluate_model(model, X_test, y_test, model_name):
     y_pred = model.predict(X_test)
