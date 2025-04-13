@@ -1,5 +1,8 @@
+
 ## Results
 #TODO- Get results using Min Max scaler
+
+### Below results using Sklearn libraries (do not support combined loss of multiple targets)
 
 ### Using a standard scalar and Outliers Removed using IQR.
 
