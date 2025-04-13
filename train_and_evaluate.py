@@ -5,7 +5,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.linear_model import LinearRegression
 from sklearn.multioutput import MultiOutputRegressor
 from xgboost import XGBRegressor
-from sklearn.metrics import mean_squared_error, root_mean_squared_error
+from sklearn.metrics import mean_squared_error, root_mean_squared_error, r2_score
 import shap
 import matplotlib.pyplot as plt
 from pathlib import Path
@@ -90,11 +90,11 @@ def evaluate_model(model, X_test, y_test, model_name):
     y_pred = model.predict(X_test)
     mse = mean_squared_error(y_test, y_pred)
     rmse = root_mean_squared_error(y_test, y_pred)
+    r2_scores = r2_score(y_test, y_pred)
 
-    print(f"{model_name} MSE: {mse}")
-    print(f"{model_name} RMSE: {rmse}")
+    print(f"{model_name} \n MSE: {mse} \n RMSE: {rmse} \n R2: {r2_scores}")
 
-    return mse, rmse
+    return mse, rmse, r2_scores,
 
 def get_mlr_coefficients(mlr_model, predictors, predictands):
     mlr_coefficients_df = pd.DataFrame(mlr_model.coef_, index=predictands, columns=predictors)
