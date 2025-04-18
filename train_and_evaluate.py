@@ -17,8 +17,11 @@ ROOT_DIR = Path(__file__).resolve().parent
 def load_train_test_data(predictand: str='both'):
     """ predictand = 'clf' or 'lwp' or 'both'   """
 
-    df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / 'train_data.csv')
-    df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / 'test_data.csv')
+    train_csv = 'train_data_0.csv'
+    test_csv = 'test_data_0.csv'
+
+    df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / train_csv)
+    df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / test_csv)
 
     # Drop missing values
     df_train.dropna(inplace=True)
