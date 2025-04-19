@@ -25,15 +25,15 @@ print(f'Null Values:\n{aggregated_df.isnull().sum()}')
 predictands = ['clf', 'lwp']  # Output variables
 predictors = [var for var in aggregated_df.columns if var not in predictands + ['time', 'lat', 'lon']]  # Predictor variables
 
-#Outliers Removal
-
-y='lwp'
-#predictands = [y]
-#aggregated_df.plot(y=y, figsize=(10, 5))
-sns.boxplot(data=aggregated_df[predictands])
-
-plt.title(f"{predictands} before outliers removed")
-plt.show()
+# #Outliers Removal
+#
+# y='lwp'
+# #predictands = [y]
+# #aggregated_df.plot(y=y, figsize=(10, 5))
+# sns.boxplot(data=aggregated_df[predictands])
+#
+# plt.title(f"{predictands} before outliers removed")
+# plt.show()
 
 def remove_outliers_iqr(
         df: pd.DataFrame,
@@ -51,6 +51,7 @@ def remove_outliers_iqr(
     Returns:
         DataFrame with outliers removed
     """
+#    predictands = ['clf','lwp']
     if columns is None:
         columns = predictands
     df_filtered = df.copy()
@@ -87,6 +88,7 @@ def remove_outliers_percentile(
     Returns:
         DataFrame with outliers removed
     """
+#    predictands = ['clf','lwp']
     if columns is None:
         columns = predictands
     df_filtered = df.copy()
@@ -99,24 +101,24 @@ def remove_outliers_percentile(
 
     return df_filtered
 
-
-# calling outlier removal function
-filtered_df = remove_outliers_iqr(
-    aggregated_df,
-    columns=predictands  # Or explicitly: columns=['clf', 'lwp']
-)
-
-aggregated_df=filtered_df
-
-y='lwp'
-#predictands=[y]
-#aggregated_df.plot(y=y, figsize=(10,5))
-sns.boxplot(data=aggregated_df[predictands])
-plt.title(f"{predictands} after outliers removed")
-plt.show()
+#
+# # calling outlier removal function
+# filtered_df = remove_outliers_iqr(
+#     aggregated_df,
+#     columns=predictands  # Or explicitly: columns=['clf', 'lwp']
+# )
+#
+# aggregated_df=filtered_df
+#
+# y='lwp'
+# #predictands=[y]
+# #aggregated_df.plot(y=y, figsize=(10,5))
+# sns.boxplot(data=aggregated_df[predictands])
+# plt.title(f"{predictands} after outliers removed")
+# plt.show()
 
 # ✅ Standard Scaler function ( works on pandas DataFrame instead of ds)
-def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True) -> pd.DataFrame:
+def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True, predictors=None, predictands=None ) -> pd.DataFrame:
     if scalertype == 'standard':
         scaler = StandardScaler()
     elif scalertype == 'minmax':
@@ -136,14 +138,16 @@ def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True) -
 
     return df_scaled
 
-df_scaled = scale_df(aggregated_df, 'standard')
+#df_scaled = scale_df(aggregated_df, 'standard')
 
 # Print mean and std of the scaled variables
-for var in predictors:
-    print(f" Standard Scaled: {var}: mean={df_scaled[var].mean():.2f}, std={df_scaled[var].std():.2f}")
+# for var in predictors:
+#     print(f" Standard Scaled: {var}: mean={df_scaled[var].mean():.2f}, std={df_scaled[var].std():.2f}")
 
 # ✅ Correlation Check (Using pandas)
 def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
+    #df_scaled = scale_df(aggregated_df, 'standard')
+
     correlation_method = correlation_method.lower()
     corr_matrix = df_scaled[predictors].corr(method=correlation_method)
 
@@ -152,37 +156,83 @@ def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
     plt.title(f"Correlation Matrix ({correlation_method})")
     plt.show()
 
-compute_correlation(df_scaled)
+# df_scaled = scale_df(aggregated_df, 'standard')
+# compute_correlation(df_scaled=df_scaled)
 
-# ✅ Time-based split
-df_scaled = df_scaled.sort_values('time')
+#wrapper_function to load the preprocessed data in memory
+def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
+                    scalertype='standard',
+                    outlier_method='iqr',
+                    scale_predictands=True,
+                    selected_predictands=None):
+    # Load and aggregate
+    df = pd.read_csv(filepath)
+    df['time'] = pd.to_datetime(df['time'])
+    df = df.groupby(['time', 'lat', 'lon']).median().reset_index()
 
-# Get time values
-time_values = df_scaled['time'].unique()
+    # Define predictands based on input or use default
+    if selected_predictands is None:
+        predictands = ['clf', 'lwp']
+    else:
+        predictands = selected_predictands
 
-# Compute split index (80% train, 20% test)
-split_index = int(len(time_values) * 0.80)
-train_time = time_values[:split_index]
-test_time = time_values[split_index:]
+    predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon']]
 
-# Split dataset using pandas
-df_train = df_scaled[df_scaled['time'].isin(train_time)]
-df_test = df_scaled[df_scaled['time'].isin(test_time)]
+    # Remove outliers
+    if outlier_method == 'iqr':
+        df = remove_outliers_iqr(df, columns=predictands)
+    else:
+        raise NotImplementedError(f"Outlier method '{outlier_method}' not implemented")
 
-# Print split summary
-print(f"Training period: {train_time[0]} to {train_time[-1]}")
-print(f"Testing period: {test_time[0]} to {test_time[-1]}")
+    # Scale
+    df = scale_df(df, scalertype, scale_predictands, predictors, predictands)
 
-print(f"Training data shape: {df_train.shape}")
-print(f"Testing data shape: {df_test.shape}")
+    # Time-based train/test split
+    df = df.sort_values('time')
+    time_values = df['time'].unique()
+    split_index = int(len(time_values) * 0.67)
+    train_time = time_values[:split_index]
+    test_time = time_values[split_index:]
 
-print("Checking missing values before saving:")
-print(df_scaled.isnull().sum())
+    df_train = df[df['time'].isin(train_time)]
+    df_test = df[df['time'].isin(test_time)]
 
-#TODO - find a way to access datasets without saving them as files
+    X_train = df_train[predictors]
+    y_train = df_train[predictands]
+    X_test = df_test[predictors]
+    y_test = df_test[predictands]
 
-#✅ Save train and test datasets as CSV
-# df_train.to_csv("train_data.csv", index=False)
-# df_test.to_csv("test_data.csv", index=False)
+    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands
 #
-# print("Train and test datasets saved successfully!")
+# # ✅ Time-based split
+# df_scaled = df_scaled.sort_values('time')
+#
+# # Get time values
+# time_values = df_scaled['time'].unique()
+#
+# # Compute split index (80% train, 20% test)
+# split_index = int(len(time_values) * 0.80)
+# train_time = time_values[:split_index]
+# test_time = time_values[split_index:]
+#
+# # Split dataset using pandas
+# df_train = df_scaled[df_scaled['time'].isin(train_time)]
+# df_test = df_scaled[df_scaled['time'].isin(test_time)]
+#
+# # Print split summary
+# print(f"Training period: {train_time[0]} to {train_time[-1]}")
+# print(f"Testing period: {test_time[0]} to {test_time[-1]}")
+#
+# print(f"Training data shape: {df_train.shape}")
+# print(f"Testing data shape: {df_test.shape}")
+#
+# print("Checking missing values before saving:")
+# print(df_scaled.isnull().sum())
+#
+# #TODO - find a way to access datasets without saving them as files
+#
+# #✅ Save train and test datasets as CSV
+# # df_train.to_csv("train_data.csv", index=False)
+# # df_test.to_csv("test_data.csv", index=False)
+# #
+# # print("Train and test datasets saved successfully!")
