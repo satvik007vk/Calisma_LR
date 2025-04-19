@@ -12,46 +12,59 @@ from pathlib import Path
 from sklearn.neural_network import MLPRegressor
 from sklearn.multioutput import MultiOutputRegressor
 
+from preprocessing import preprocess_data
+
 ROOT_DIR = Path(__file__).resolve().parent
 
-def load_train_test_data(predictand: str='both'):
+
+def load_train_test_data(predictands: str='both'):
     """ predictand = 'clf' or 'lwp' or 'both'   """
 
-    train_csv = 'train_data_0.csv'
-    test_csv = 'test_data_0.csv'
+    # if predictands = 'both':
+    #     predictands = ['clf', 'lwp']
+    # else:
+    #     predictands = [predictand]
+    #
+    #
 
-    df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / train_csv)
-    df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / test_csv)
+
+    # train_csv = 'train_data_1.csv'
+    # test_csv = 'test_data_1.csv'
+    #
+    # df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / train_csv)
+    # df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / test_csv)
+
+    df_train, df_test, X_train, y_train, X_test, Y_test, predictors, predictands = preprocess_data(scale_predictands=False)
 
     # Drop missing values
     df_train.dropna(inplace=True)
     df_test.dropna(inplace=True)
 
     print("Train and test data loaded successfully! Missing values dropped.")
-
-    if predictand == 'both':
-        predictand = ['clf', 'lwp']
-        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']]
-
-    elif predictand == 'clf':
-        predictand = ['clf']
-        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']+['lwp']]
-
-
-    elif predictand == 'lwp':
-        predictand = ['lwp']
-        predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']+['clf']]
     #
-    # predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']]
+    # if predictands == 'both':
+    #     predictands = ['clf', 'lwp']
+    #     predictors = [var for var in df_train.columns if var not in predictands + ['time', 'lat', 'lon']]
+    #
+    # elif predictands == 'clf':
+    #     predictands = ['clf']
+    #     predictors = [var for var in df_train.columns if var not in predictands + ['time', 'lat', 'lon']+['lwp']]
+    #
+    #
+    # elif predictands == 'lwp':
+    #     predictands = ['lwp']
+    #     predictors = [var for var in df_train.columns if var not in predictands + ['time', 'lat', 'lon']+['clf']]
+    # #
+    # # predictors = [var for var in df_train.columns if var not in predictand + ['time', 'lat', 'lon']]
 
     # Split into X and y
     X_train = df_train[predictors]
-    y_train = df_train[predictand]
+    y_train = df_train[predictands]
     X_test = df_test[predictors]
-    y_test = df_test[predictand]
+    y_test = df_test[predictands]
 
 
-    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictand
+    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands
 
 def train_mlr(X_train, y_train):
     mlr_model  = LinearRegression()
