@@ -34,7 +34,8 @@ def load_train_test_data(predictands: str='both'):
     # df_train = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / train_csv)
     # df_test = pd.read_csv(ROOT_DIR / 'Daten' / 'train_test' / test_csv)
 
-    df_train, df_test, X_train, y_train, X_test, Y_test, predictors, predictands = preprocess_data(scale_predictands=False)
+    df_train, df_test, X_train, y_train, X_test, Y_test, predictors, predictands = preprocess_data(
+        scale_predictands=True)
 
     # Drop missing values
     df_train.dropna(inplace=True)
