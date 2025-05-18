@@ -171,8 +171,18 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
     df = df.groupby(['time', 'lat', 'lon']).median().reset_index()
 
     # Define predictands based on input or use default
-    if selected_predictands is None:
+    if selected_predictands == 'both':
         predictands = ['clf', 'lwp']
+        predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon']]
+
+    elif selected_predictands == 'clf':
+        predictands = ['clf']
+        predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon'] + ['lwp']]
+
+    elif selected_predictands == 'lwp':
+        predictands = ['lwp']
+        predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon'] + ['clf']]
+
     else:
         predictands = selected_predictands
 
