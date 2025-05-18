@@ -25,15 +25,6 @@ print(f'Null Values:\n{aggregated_df.isnull().sum()}')
 predictands = ['clf', 'lwp']  # Output variables
 predictors = [var for var in aggregated_df.columns if var not in predictands + ['time', 'lat', 'lon']]  # Predictor variables
 
-# #Outliers Removal
-#
-# y='lwp'
-# #predictands = [y]
-# #aggregated_df.plot(y=y, figsize=(10, 5))
-# sns.boxplot(data=aggregated_df[predictands])
-#
-# plt.title(f"{predictands} before outliers removed")
-# plt.show()
 
 def remove_outliers_iqr(
         df: pd.DataFrame,
@@ -164,7 +155,27 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
                     scalertype='standard',
                     outlier_method='iqr',
                     scale_predictands=True,
-                    selected_predictands=None):
+                    selected_predictands='both',
+                    train_fraction=0.8):
+
+    """
+
+    Wrapper function that calls other functions to preprocess the data. It includes:
+    loading  from csv,
+    scaling,
+    removing outliers,
+    and splitting into train/test sets.
+    assigning predictors and predictors,
+
+    :param train_fraction:
+    :param filepath: path to the input CSV file
+    :param scalertype: scaler type ('standard' or 'minmax')
+    :param outlier_method: outlier removal method 'iqr' or 'percentile' or None (default = 'iqr')
+    :param scale_predictands: if True, scale the predictands (default = True)
+    :param selected_predictands: choose 'both' or 'clf' or 'lwp' (default = 'both')
+    :param train_fraction: fraction of data to be used for training (default 0.8)
+    :return:
+    """
     # Load and aggregate
     df = pd.read_csv(filepath)
     df['time'] = pd.to_datetime(df['time'])
@@ -184,15 +195,17 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
         predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon'] + ['clf']]
 
     else:
-        predictands = selected_predictands
-
-    predictors = [col for col in df.columns if col not in predictands + ['time', 'lat', 'lon']]
+        raise ValueError('selected_predictands must be "both" or "clf" or "lwp"')
 
     # Remove outliers
-    if outlier_method == 'iqr':
+    if outlier_method is None:
+        df=df
+    elif outlier_method == 'iqr':
         df = remove_outliers_iqr(df, columns=predictands)
+    elif outlier_method == 'percentile':
+        df = remove_outliers_percentile(df, columns=predictands)
     else:
-        raise NotImplementedError(f"Outlier method '{outlier_method}' not implemented")
+        raise NotImplementedError(f"please chose a valid outlier removal method: 'iqr' or 'percentile'")
 
     # Scale
     df = scale_df(df, scalertype, scale_predictands, predictors, predictands)
@@ -200,7 +213,8 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
     # Time-based train/test split
     df = df.sort_values('time')
     time_values = df['time'].unique()
-    split_index = int(len(time_values) * 0.67)
+
+    split_index = int(len(time_values) * train_fraction)
     train_time = time_values[:split_index]
     test_time = time_values[split_index:]
 
