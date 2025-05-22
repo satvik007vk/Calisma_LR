@@ -156,7 +156,7 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
                     outlier_method='iqr',
                     scale_predictands=True,
                     selected_predictands='both',
-                    train_fraction=0.8):
+                    train_fraction=0.75):
 
     """
 
