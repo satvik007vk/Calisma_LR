@@ -152,10 +152,10 @@ def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
 
 #wrapper_function to load the preprocessed data in memory
 def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
-                    scalertype='standard',
-                    outlier_method='iqr',
-                    scale_predictands=True,
                     selected_predictands='both',
+                    outlier_method='iqr',
+                    scalertype='standard',
+                    scale_predictands=True,
                     train_fraction=0.75):
 
     """
@@ -167,19 +167,20 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
     and splitting into train/test sets.
     assigning predictors and predictors,
 
-    :param train_fraction:
+    ```python
     :param filepath: path to the input CSV file
-    :param scalertype: scaler type ('standard' or 'minmax')
-    :param outlier_method: outlier removal method 'iqr' or 'percentile' or None (default = 'iqr')
-    :param scale_predictands: if True, scale the predictands (default = True)
     :param selected_predictands: choose 'both' or 'clf' or 'lwp' (default = 'both')
-    :param train_fraction: fraction of data to be used for training (default 0.8)
-    :return:
-    """
+    :param outlier_method: outlier removal method 'iqr' or 'percentile' or None (default = 'iqr')
+    :param scalertype: scaler type ('standard' or 'minmax')
+    :param scale_predictands: if True, scale the predictands (default = True)
+    :param train_fraction: fraction of data to be used for training (default 0.75)
+
+    :return: df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands
+    ```    """
     # Load and aggregate
     df = pd.read_csv(filepath)
     df['time'] = pd.to_datetime(df['time'])
-    df = df.groupby(['time', 'lat', 'lon']).median().reset_index()
+    df = df.groupby(['time', 'lat', 'lon']).median().reset_index() # this ensures that there are no duplicates for a given combination of time, lat, lon
 
     # Define predictands based on input or use default
     if selected_predictands == 'both':
