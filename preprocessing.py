@@ -136,7 +136,7 @@ def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True, p
 #     print(f" Standard Scaled: {var}: mean={df_scaled[var].mean():.2f}, std={df_scaled[var].std():.2f}")
 
 # ✅ Correlation Check (Using pandas)
-def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
+def compute_correlation(df_scaled, correlation_method: str = 'pearson', correlation_cutoff: float = 0.7):
     #df_scaled = scale_df(aggregated_df, 'standard')
 
     correlation_method = correlation_method.lower()
@@ -147,8 +147,20 @@ def compute_correlation(df_scaled, correlation_method: str = 'pearson'):
     plt.title(f"Correlation Matrix ({correlation_method})")
     plt.show()
 
-# df_scaled = scale_df(aggregated_df, 'standard')
-# compute_correlation(df_scaled=df_scaled)
+    # Print all variable pairs with |correlation| > correlation_cutoff
+    high_corr_pairs = []
+    cols = corr_matrix.columns
+    for i in range(len(cols)):
+        for j in range(i+1, len(cols)):
+            corr_val = corr_matrix.iloc[i, j]
+            if abs(corr_val) > correlation_cutoff:
+                high_corr_pairs.append((cols[i], cols[j], corr_val))
+    if high_corr_pairs:
+        print(f"Pairs with |correlation| > {correlation_cutoff}:")
+        for var1, var2, corr_val in high_corr_pairs:
+            print(f"{var1} & {var2}: {corr_val:.2f}")
+    else:
+        print(f"No pairs with |correlation| > {correlation_cutoff}")
 
 #wrapper_function to load the preprocessed data in memory
 def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
@@ -156,7 +168,7 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
                     outlier_method='iqr',
                     scalertype='standard',
                     scale_predictands=True,
-                    train_fraction=0.75):
+                    ):
 
     """
 
@@ -209,10 +221,14 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
         raise NotImplementedError(f"please chose a valid outlier removal method: 'iqr' or 'percentile'")
 
     # Scale
-    df = scale_df(df, scalertype, scale_predictands, predictors, predictands)
+    df_preprocessed = scale_df(df, scalertype, scale_predictands, predictors, predictands)
+    print(f"Preprocessed data returned.\n Scaled Data: {scalertype} scaler applied.\n Outlier removal method: {outlier_method}.\n Predictands: {predictands}")
+    return df_preprocessed, predictors, predictands
+
+def train_test_split(df_preprocessed, predictors=predictors, predictands=predictands, train_fraction=0.75):
 
     # Time-based train/test split
-    df = df.sort_values('time')
+    df = df_preprocessed.sort_values('time')
     time_values = df['time'].unique()
 
     split_index = int(len(time_values) * train_fraction)
@@ -227,7 +243,7 @@ def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
     X_test = df_test[predictors]
     y_test = df_test[predictands]
 
-    return df_train, df_test, X_train, y_train, X_test, y_test, predictors, predictands
+    return df_train, df_test, X_train, y_train, X_test, y_test
 #
 # # ✅ Time-based split
 # df_scaled = df_scaled.sort_values('time')
