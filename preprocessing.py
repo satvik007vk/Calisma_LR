@@ -165,7 +165,7 @@ def compute_correlation(df_scaled, correlation_method: str = 'pearson', correlat
 #wrapper_function to load the preprocessed data in memory
 def preprocess_data(filepath="./Daten/se_atlantic_df.csv",
                     selected_predictands='both',
-                    outlier_method='iqr',
+                    outlier_method=None,
                     scalertype='standard',
                     scale_predictands=True,
                     ):
