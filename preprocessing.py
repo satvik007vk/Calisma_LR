@@ -244,6 +244,34 @@ def train_test_split(df_preprocessed, predictors=predictors, predictands=predict
     y_test = df_test[predictands]
 
     return df_train, df_test, X_train, y_train, X_test, y_test
+
+def plot_outliers_boxplot(df: pd.DataFrame, columns, title=None):
+    """
+    Plots boxplots for the specified columns to visualize outliers.
+    Args:
+        df: Input DataFrame
+        columns: List of columns to plot
+        title: Optional title for the plot
+    """
+    if columns is None:
+        columns = predictands
+
+    plt.figure(figsize=(max(6, len(columns)*2), 6))
+    sns.boxplot(data=df[columns], orient="h")
+    if title:
+        plt.title(title)
+    plt.tight_layout()
+    plt.show()
+
+predictands = ['clf']  # Output variables
+# Plot outliers before removal
+plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} Before Removing Outliers ")
+
+# Remove outliers
+aggregated_df = remove_outliers_iqr(aggregated_df, columns=predictands)
+
+# Plot outliers after removal
+plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} After Removing Outliers ")
 #
 # # ✅ Time-based split
 # df_scaled = df_scaled.sort_values('time')
@@ -277,3 +305,32 @@ def train_test_split(df_preprocessed, predictors=predictors, predictands=predict
 # # df_test.to_csv("test_data.csv", index=False)
 # #
 # # print("Train and test datasets saved successfully!")
+
+def count_outliers_iqr(df: pd.DataFrame, columns=None, iqr_coef: float = 1.5):
+    """
+    Counts the number of outliers using the IQR method for specified columns.
+    Args:
+        df: Input DataFrame
+        columns: List of columns to process
+        iqr_coef: Multiplier for IQR (default 1.5)
+    Returns:
+        Dictionary with column names as keys and outlier counts as values
+    """
+    if columns is None:
+        columns = predictands
+    outlier_counts = {}
+    for col in columns:
+        Q1 = df[col].quantile(0.25)
+        Q3 = df[col].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - iqr_coef * IQR
+        upper_bound = Q3 + iqr_coef * IQR
+        below = df[df[col] < lower_bound].shape[0]
+        above = df[df[col] > upper_bound].shape[0]
+        total = below + above
+        outlier_counts[col] = {
+            'total': total,
+            'below': below,
+            'above': above
+        }
+    return outlier_counts
