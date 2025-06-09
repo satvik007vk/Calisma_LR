@@ -136,11 +136,14 @@ def scale_df(df, scalertype: str = 'standard', scale_predictands: bool = True, p
 #     print(f" Standard Scaled: {var}: mean={df_scaled[var].mean():.2f}, std={df_scaled[var].std():.2f}")
 
 # ✅ Correlation Check (Using pandas)
-def compute_correlation(df_scaled, correlation_method: str = 'pearson', correlation_cutoff: float = 0.7):
+def compute_correlation(df_scaled, correlation_method: str = 'pearson', correlation_cutoff: float = 0.7, include_predictands: bool = False):
     #df_scaled = scale_df(aggregated_df, 'standard')
 
     correlation_method = correlation_method.lower()
-    corr_matrix = df_scaled[predictors].corr(method=correlation_method)
+    if include_predictands:
+        corr_matrix = df_scaled.corr(method=correlation_method)
+    else:
+        corr_matrix = df_scaled[predictors].corr(method=correlation_method)
 
     plt.figure(figsize=(10, 8))
     sns.heatmap(corr_matrix, annot=True, fmt=".1f", cmap="coolwarm")
@@ -262,16 +265,16 @@ def plot_outliers_boxplot(df: pd.DataFrame, columns, title=None):
         plt.title(title)
     plt.tight_layout()
     plt.show()
-
-predictands = ['clf']  # Output variables
-# Plot outliers before removal
-plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} Before Removing Outliers ")
-
-# Remove outliers
-aggregated_df = remove_outliers_iqr(aggregated_df, columns=predictands)
-
-# Plot outliers after removal
-plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} After Removing Outliers ")
+#
+# predictands = ['clf']  # Output variables
+# # Plot outliers before removal
+# plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} Before Removing Outliers ")
+#
+# # Remove outliers
+# aggregated_df = remove_outliers_iqr(aggregated_df, columns=predictands)
+#
+# # Plot outliers after removal
+# plot_outliers_boxplot(aggregated_df, predictands, title=f"{predictands} After Removing Outliers ")
 #
 # # ✅ Time-based split
 # df_scaled = df_scaled.sort_values('time')
