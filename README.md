@@ -6,9 +6,9 @@ Welcome to the Calisma Project repository.
 
 First, create the conda environment and install dependencies by running the following script:</br>
 (you should have conda and python installed to run this) </br>
-`conda env create -f environment.yml` 
+`conda env create -f environment.yaml` 
 
-Then, activate your environment using:</br>
+Then, activate the newly created environment using:</br>
 `conda activate calisma`</br>
 To run the code using your application UI select this [conda environment as your python interpreter.](https://www.google.com/search?q=select+existing+conda+environment+as+python+interpreter&client=ubuntu-sn&hs=rkJ&sca_esv=63c9e37f8da915f5&channel=fs&sxsrf=AHTn8zqxaLTBEhH0yx9c5RTSDwiCU5Jqzw%3A1742553270476&ei=tkDdZ87cHIWui-gP_4WP6QE&ved=0ahUKEwjOj8Hl_JqMAxUF1wIHHf_CIx0Q4dUDCBA&uact=5&oq=select+existing+conda+environment+as+python+interpreter&gs_lp=Egxnd3Mtd2l6LXNlcnAiN3NlbGVjdCBleGlzdGluZyBjb25kYSBlbnZpcm9ubWVudCBhcyBweXRob24gaW50ZXJwcmV0ZXIyBRAAGO8FMgUQABjvBTIFEAAY7wUyBRAAGO8FMggQABiiBBiJBUiHGVCzBVipEnABeAGQAQCYAYYBoAGiBqoBAzYuM7gBA8gBAPgBAZgCCaACtgbCAgoQABiwAxjWBBhHwgIHECMYsAIYJ8ICCBAAGIAEGKIEmAMAiAYBkAYIkgcDNS40oAe4ObIHAzQuNLgHrAY&sclient=gws-wiz-serp)
 
