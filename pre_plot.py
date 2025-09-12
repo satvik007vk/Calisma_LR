@@ -240,6 +240,37 @@ class PlotData:
 
         plt.tight_layout()
         return fig
+
+    def plot_data_extent_on_map(ds, title="Data Extent (Bounding Box)"):
+        """
+        Plots the extent (bounding box) of the data on a world map using the min/max lat/lon from the dataset.
+        Args:
+            ds (xarray.Dataset): The dataset containing 'lat' and 'lon' coordinates.
+            title (str): Title for the plot.
+        """
+        # Extract min/max lat/lon
+        min_lon = float(ds['lon'].min())
+        max_lon = float(ds['lon'].max())
+        min_lat = float(ds['lat'].min())
+        max_lat = float(ds['lat'].max())
+
+        # Create bounding box coordinates
+        bbox_lons = [min_lon, max_lon, max_lon, min_lon, min_lon]
+        bbox_lats = [min_lat, min_lat, max_lat, max_lat, min_lat]
+
+        plt.figure(figsize=(12, 6))
+        ax = plt.axes(projection=ccrs.PlateCarree())
+        ax.set_global()
+        ax.coastlines()
+        ax.add_feature(cfeature.BORDERS, linestyle=':')
+        ax.add_feature(cfeature.LAND, edgecolor='black')
+        ax.add_feature(cfeature.OCEAN, facecolor='lightblue')
+
+        # Plot bounding box
+        ax.plot(bbox_lons, bbox_lats, color='red', linewidth=2, marker='o', transform=ccrs.PlateCarree(), label='Study Area Extent')
+        ax.legend()
+        plt.title(title)
+        plt.show()
 # #Calling functions and plotting
 # file = "./Daten/se_atlantic_df.csv"
 # df = pd.read_csv(file, index_col='time')
