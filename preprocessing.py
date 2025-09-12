@@ -248,19 +248,22 @@ def train_test_split(df_preprocessed, predictors=predictors, predictands=predict
 
     return df_train, df_test, X_train, y_train, X_test, y_test
 
-def plot_outliers_boxplot(df: pd.DataFrame, columns, title=None):
+def plot_outliers_boxplot(df: pd.DataFrame, columns, title=None, xlim=None):
     """
     Plots boxplots for the specified columns to visualize outliers.
     Args:
         df: Input DataFrame
         columns: List of columns to plot
         title: Optional title for the plot
+        xlim: Tuple (min, max) for x-axis limits (applied to all columns)
     """
     if columns is None:
         columns = predictands
 
     plt.figure(figsize=(max(6, len(columns)*2), 6))
     sns.boxplot(data=df[columns], orient="h")
+    if xlim is not None:
+        plt.xlim(xlim)
     if title:
         plt.title(title)
     plt.tight_layout()
