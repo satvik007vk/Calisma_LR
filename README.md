@@ -1,6 +1,6 @@
 # Calisma
 
-The Calisma Project repository provides code and resources for training and evaluating machine learning models to predict climate variables, with a focus on Cloud Fraction (CLF) and Liquid Water Path (LWP). 
+The Calisma project repository provides code and resources for training and evaluating machine learning models to predict climate variables, with a focus on Cloud Fraction (CLF) and Liquid Water Path (LWP). 
 It supports both multi-target and single-target prediction approaches.
 
 ## Environment Setup
