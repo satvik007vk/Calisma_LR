@@ -40,7 +40,7 @@ The script [preprocessing.py](preprocessing.py) contains functions to
 - Split using a fixed time value </br>
 
 ###  Single-target Training and Evaluation 
-- The script [train_and_evaluate.py](train_and_evaluate.py) chandles single-target training, evaluation, and related model functions.
+- The script [train_and_evaluate.py](train_and_evaluate.py) handles single-target training, evaluation, and related model functions.
 - The script [train_evaluate_analyses.ipynb](train_evaluate_analyses.ipynb) - Evaluate the results of training models and some visual plots
 
 
