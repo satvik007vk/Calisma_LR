@@ -22,8 +22,7 @@ Commit and push your edits to this new branch. And then create a pull request on
 
 ### Model Training and Analyses
 [multimodal_train_and_evaluate.ipynb](multimodal_train_and_evaluate.ipynb) is the most important notebook to run the training, evaluation and analyses.
-You only need to set the predictor name to 'both' for multi/target prediction and to 'clf'/'lwp' for respective single-target predictions (more details in the code).
-It calls the functions from other python scripts and notebooks.
+The _predictands_ variable name should be set to '_both_' for multi-target prediction and to _'clf'_ or _'lwp'_ for respective single-target predictions (more details in the code comments).
 
 ### Below are Optional Files if you want to do more analyses
 
